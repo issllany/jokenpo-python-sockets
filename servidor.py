@@ -32,14 +32,14 @@ def log(msg):
 
 def autenticar_ou_cadastrar(conn):
     try:
-        conn.send("1 - Login\n2 - Cadastro\nEscolha: ".encode())
+        conn.send("1 - Login\n2 - Cadastro\n3 - Ranking\nEscolha: ".encode())
         opcao = conn.recv(1024).decode().strip()
-        
-        conn.send("Login: ".encode())
-        login = conn.recv(1024).decode().strip()
-        
-        conn.send("Senha: ".encode())
-        senha = conn.recv(1024).decode().strip()
+        if opcao in ["1", "2"]:
+            conn.send("Login: ".encode())
+            login = conn.recv(1024).decode().strip()
+            
+            conn.send("Senha: ".encode())
+            senha = conn.recv(1024).decode().strip()
     except:
         return None 
 
@@ -76,7 +76,12 @@ def autenticar_ou_cadastrar(conn):
              return "REPETIR"
 
         return login 
-    
+    elif opcao == "3":
+        top_ranking = ranking.obter_top_5()
+        conn.send(top_ranking.encode())
+        conn.send("\n".encode())
+        
+        return "REPETIR"
     return "REPETIR"
 
 def processar_rodada():
@@ -128,9 +133,7 @@ def processar_rodada():
 
         msg_vitoria = f"\n🏆 {vencedor_partida} venceu a partida!\n"
         broadcast(msg_vitoria)
-        top_ranking = ranking.obter_top_5()
         log(f"Fim de jogo. Vencedor: {vencedor_partida}")
-        broadcast(top_ranking)
         time.sleep(1.0) 
         broadcast("FIM_DA_PARTIDA")
         print(ranking.obter_top_5())

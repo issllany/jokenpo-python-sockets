@@ -1,3 +1,4 @@
-isa;7;0
-julio;0;8
+isa;7;2
+julio;2;8
 Teste;1;0
+mary;1;1
